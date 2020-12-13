@@ -1,0 +1,41 @@
+# to build image:
+# > docker-compose build
+
+# to run container (and keep atached to the container)
+# > docker-compose up [<service_name>]
+
+# to run container as a daemon
+# > docker-compose up -d [<service_name>]
+# to attach to daemon container
+# > docker exec -it <container_id> bash
+
+# to stop the started container
+# > docker-compose stop [<service_name>]
+
+# to stop and remove the started container
+# > docker-compose down [<service_name>]
+
+
+version: "3"
+services:
+  portainer:
+    image: portainer/portainer-ce
+    tty: true
+    volumes:
+      - ./portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - $PORTAINER_PORT:9000
+      - $PORTAINER_AGENT_PORT:8000
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    networks:
+      - portainer
+    #logging:
+    #  driver: "syslog"
+    #  options:
+    #    tag: "explicatos_scrapy"
+
+networks:
+  portainer:
