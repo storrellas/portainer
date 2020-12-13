@@ -1,0 +1,27 @@
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name <hostname>;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl;
+
+  ssl on;
+  ssl_certificate /etc/letsencrypt/live/<hostname>/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/<hostname>/privkey.pem;
+
+  server_name <hostname>;
+
+  location /portainer/ {
+      proxy_pass http://localhost:7070/;
+      include proxy_params;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "Upgrade";
+  }
+
+
+}
